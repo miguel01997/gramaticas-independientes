@@ -21,6 +21,8 @@ public class FormIngreso extends javax.swing.JFrame {
     //char variables[];
     char simbolos[];
     String var = "S";
+    String tabla [][];
+    String MatrizFinal[][];
     // matriz ArregloVariables = new matriz();
      Vector vectorVariables = new Vector();
      Vector vectorSimbolos = new Vector();
@@ -70,6 +72,11 @@ public class FormIngreso extends javax.swing.JFrame {
     }
     }
 
+   public void copiarMatrizFinal (String[][] tabla, int fila, int tamano){
+      for (int i =0; i<tamano;i++){
+          MatrizFinal[fila][i]=tabla[0][i];
+      }
+   }
 
 //    public void copiarVariables(char[] variables, int tamano){ //tamano infica el siguiente cuadro en blanco para agregar las variables y simbolos
 //        char a;
@@ -250,21 +257,28 @@ public class FormIngreso extends javax.swing.JFrame {
     }//GEN-LAST:event_ButtonNuevaProduccionMouseClicked
 
     private void ButtonNextMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ButtonNextMouseClicked
+        
+        Cadena ventanaCadena = new Cadena();
+        ventanaCadena.setTablaRecibida(MatrizFinal);
+        ventanaCadena.setNumerocolumnas(tamanoVectorVariables);
+        ventanaCadena.setNumerofilas(tamanoVectorSimbolos);
+        ventanaCadena.main();
+        this.setVisible(false);
         //**LLAMAR A DOS METODOS PARA QUE ORGANICEN LOS DATOS EN LOS VECTORES**
         //organizar organiceVector = new organizar();
         
         //vectorOrdenados=organiceVector.ordenar(vectorTabla, vectorSimbolos);
-       
-        matriz armarTabla = new matriz();
-        tamanoVectorSimbolos=vectorSimbolos.size();
-        tamanoVectorVariables=vectorVariables.size();
-        //if (numproducciones==1){
-        String tabla[][]=armarTabla.construirTabla(vectorSimbolos, vectorTabla,tamanoVectorSimbolos,tamanoVectorVariables);
-        TablaAnalisis tablaAnalizador = new TablaAnalisis();
-        tablaAnalizador.setMatriz(tabla);
-        String[] st =new String[vectorSimbolos.size()];
-        vectorSimbolos.toArray( st );
-        tablaAnalizador.setSimbolos(st);
+//
+//        matriz armarTabla = new matriz();
+//        tamanoVectorSimbolos=vectorSimbolos.size();
+//        tamanoVectorVariables=vectorVariables.size();
+//        //if (numproducciones==1){
+//        String tabla[][]=armarTabla.construirTabla(vectorSimbolos, vectorTabla,tamanoVectorSimbolos,tamanoVectorVariables);
+//        TablaAnalisis tablaAnalizador = new TablaAnalisis();
+//        tablaAnalizador.setMatriz(tabla);
+//        String[] st =new String[vectorSimbolos.size()];
+//        vectorSimbolos.toArray( st );
+//        tablaAnalizador.setSimbolos(st);
         //TablaAnalisis.main();
 
     }//GEN-LAST:event_ButtonNextMouseClicked
@@ -275,9 +289,17 @@ public class FormIngreso extends javax.swing.JFrame {
         setVariable();
         vectorTabla.add(vectorProducciones);
         matriz almacenarDatosTabla = new matriz();
+        if(numproducciones==1){
+        vectorSimbolos.add("$");
+        }
         tamanoVectorSimbolos=vectorSimbolos.size();
         tamanoVectorVariables=vectorVariables.size();
-        almacenarDatosTabla.construirTabla(vectorSimbolos,vectorProducciones,tamanoVectorSimbolos,numproducciones);
+        tabla=almacenarDatosTabla.construirTabla(vectorSimbolos,vectorProducciones,tamanoVectorSimbolos,1);
+        if(numproducciones==1){
+            MatrizFinal=new String[tamanoVectorVariables][tamanoVectorSimbolos+3];
+            copiarMatrizFinal(tabla, 0,tamanoVectorSimbolos);
+        }
+        copiarMatrizFinal(tabla, 1,tamanoVectorSimbolos);
         vectorProducciones.clear();
         produccion=0;
     }//GEN-LAST:event_BtnSiguienteVariableMouseClicked

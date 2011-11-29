@@ -15,6 +15,8 @@ public class matriz {
     int i =0;//filas
     int j=0 ;//columnas
     int f=0;//numero de variables existentes
+//    int filas;
+//    int columnas;
     int c=0;//numero de simbolos existentes
     String[][] TablaVariables;
 
@@ -59,15 +61,15 @@ public class matriz {
         setF(numproduccion);
         //setI(numproduccion);
         setC(numColumnas);
-        if (numproduccion==1){
-        inicializarTablaVariables(f+1,c+1);
+        
+        inicializarTablaVariables(2,c);
+        //if (numproduccion==1){
         for (int k=0;k<longitudVectorSimbolos;k++){
-            simbolos.add("$");
             setTabla(simbolos.elementAt(k).toString());
             setJ(j+1);
         }
         setJ(0);
-        }
+        //}
         setI(numproduccion);
         for (int k=0;k<longitudVectorOrdenados;k++){
             setTabla(ordenados.elementAt(k).toString());

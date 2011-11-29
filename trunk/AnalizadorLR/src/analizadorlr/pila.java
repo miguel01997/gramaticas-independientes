@@ -6,14 +6,23 @@
 package analizadorlr;
 
 import java.util.Stack;
+import java.util.Vector;
 
 /**
  *
  * @author juanda
  */
 public class pila {
-    
-   // public String crearpila()
-            Stack pila = new Stack();
 
+    Stack pilaCadena = new Stack();
+    Stack pilaLenguaje = new Stack();
+
+   
+    public void InsertarPilaCadena (char elemento) {
+        pilaCadena.push(elemento);
+    }
+
+    public void InsertarPilaLenguaje (char elemento) {
+        pilaLenguaje.push(elemento);
+    }
 }
