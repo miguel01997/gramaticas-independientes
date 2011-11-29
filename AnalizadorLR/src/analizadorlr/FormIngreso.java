@@ -10,6 +10,7 @@
  */
 package analizadorlr;
 
+import java.util.Vector;
 import javax.swing.JOptionPane;
 
 /**
@@ -17,17 +18,84 @@ import javax.swing.JOptionPane;
  * @author juanda
  */
 public class FormIngreso extends javax.swing.JFrame {
+    //char variables[];
+    char simbolos[];
     String var = "S";
-     matriz ArregloVariables = new matriz();
+    // matriz ArregloVariables = new matriz();
+     Vector vectorVariables = new Vector();
+     Vector vectorSimbolos = new Vector();
+     Vector vectorProducciones =  new Vector();
+     Vector vectorOrdenados = new Vector();//Vector para almacenar las producciones en el mismo orden en que aparecen los simblos.
+     Vector vectorTabla = new Vector();//Vector de vectores para almacenar la tabl completa
+     int tamanoVectorSimbolos= vectorSimbolos.size();
+     int tamanoVectorVariables;
+     int numvariable = 0;
+     int produccion = 0;
+    public int numproducciones=0;
 
+//     public void almacenarDatosTabla (Vector vectorAlmacenar){
+//       vectorTabla.add(vectorAlmacenar);
+//     }
 
     /** Creates new form FormIngreso */
     public FormIngreso() {
         initComponents();
-       
-       LabelVariable.setText(var);
-      // ArregloVariables.setVariables(var);
+        vectorVariables.add("S");
+       String a = (String)vectorVariables.elementAt(0);
+       vectorSimbolos.add(0,"");
+       LabelVariable.setText(a);
 
+    }
+    
+    public void repetidosVariables(Vector cadena){
+        boolean repetido=false;
+           for(int j=0;j<cadena.size();j++){
+               if (vectorVariables.contains(cadena.elementAt(j))){
+                   repetido=true;
+               }
+               else
+                   vectorVariables.add(cadena.elementAt(j));
+    }
+    }
+
+
+   public void repetidosSimbolos(Vector cadena){
+        boolean repetido=false;
+           for(int j=0;j<cadena.size();j++){
+               if (vectorSimbolos.contains(cadena.elementAt(j))){
+                   repetido=true;
+               }
+               else
+                   vectorSimbolos.add(cadena.elementAt(j));
+    }
+    }
+
+
+//    public void copiarVariables(char[] variables, int tamano){ //tamano infica el siguiente cuadro en blanco para agregar las variables y simbolos
+//        char a;
+//        int longitudvector = variables.length;
+//        for (int i = tamano; i<longitudvector;i++){
+//            this.variables[i]=variables[i];
+//        }
+
+//    }
+
+    public void setVariable(){
+        tamanoVectorVariables = vectorVariables.size();
+        if (numvariable<tamanoVectorVariables){
+        String letra = vectorVariables.elementAt(numvariable).toString();
+        if (letra=="S"){
+            numvariable++;
+            letra = vectorVariables.elementAt(numvariable).toString();
+            }
+        LabelVariable.setText(letra);
+        //numvariable++;
+    }
+        else{
+            ButtonNuevaProduccion.setEnabled(false);
+            BtnSiguienteVariable.setEnabled(false);
+            ButtonNext.setEnabled(true);
+        }
     }
 
     public String getVar() {
@@ -54,6 +122,8 @@ public class FormIngreso extends javax.swing.JFrame {
         ButtonNuevaProduccion = new javax.swing.JButton();
         ButtonCancel = new javax.swing.JButton();
         ButtonNext = new javax.swing.JButton();
+        BtnSiguienteVariable = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -74,6 +144,22 @@ public class FormIngreso extends javax.swing.JFrame {
         });
 
         ButtonNext.setText("Siguiente");
+        ButtonNext.setEnabled(false);
+        ButtonNext.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ButtonNextMouseClicked(evt);
+            }
+        });
+
+        BtnSiguienteVariable.setText("Siguiente variable");
+        BtnSiguienteVariable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                BtnSiguienteVariableMouseClicked(evt);
+            }
+        });
+
+        jLabel2.setFont(new java.awt.Font("Ubuntu", 1, 12)); // NOI18N
+        jLabel2.setText("* Lambda-->$");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -87,32 +173,45 @@ public class FormIngreso extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(44, 44, 44)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(ButtonCancel)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(TextFieldProduccion, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(LabelVariable, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(ButtonNext)
-                                        .addComponent(ButtonNuevaProduccion)))))))
-                .addContainerGap(39, Short.MAX_VALUE))
+                                    .addComponent(TextFieldProduccion, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(LabelVariable, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(ButtonNuevaProduccion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(BtnSiguienteVariable, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(ButtonCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(ButtonNext, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(51, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addComponent(LabelVariable, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(79, 79, 79)
+                        .addComponent(ButtonNuevaProduccion)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(BtnSiguienteVariable)
+                        .addGap(8, 8, 8))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(53, 53, 53)
+                        .addComponent(LabelVariable, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(TextFieldProduccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(TextFieldProduccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ButtonNuevaProduccion))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ButtonCancel)
-                    .addComponent(ButtonNext))
+                    .addComponent(ButtonNext)
+                    .addComponent(ButtonCancel))
                 .addGap(41, 41, 41))
         );
 
@@ -126,24 +225,62 @@ public class FormIngreso extends javax.swing.JFrame {
     private void ButtonNuevaProduccionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ButtonNuevaProduccionMouseClicked
 
         String varchar = TextFieldProduccion.getText();//Obtener el texto ingresado por el usuario
-        validador validacion = new validador();
-        boolean correcto = validacion.validar(varchar);
-        if (correcto == true){
-            int k = ArregloVariables.getJ(); //mover el puntero en el arreglo para la
-            ArregloVariables.setJ(k+1);// insercion de las producciones
-            ArregloVariables.setVariables(varchar);//Inserta el valor dentro de la matriz
+        validador validacion = new validador();//Crea un objeto de tipo validador
+        boolean correcto = validacion.validar(varchar);//envia la palabra 'varchar' al objeto validacion
+        boolean acepta = validacion.variables(varchar);
+        boolean repite = validacion.repite(varchar);
+        if (correcto == true && acepta== true && repite==false){ //si el validador devuelve true, la evaluacion sintactica fue correcta
+            if (produccion==0){
+            vectorProducciones.add(vectorVariables.elementAt(numvariable));
+            produccion = 1;
+            }
+            vectorProducciones.add(varchar);
+            repetidosSimbolos(validacion.getSimbolos());
+            repetidosVariables(validacion.getVariables());
             TextFieldProduccion.setText(null);//Limpia el cuadro de texto para que el usuario
-            }                                 //ingrese una nueva produccion.
-        else
+                                                //ingrese una nueva produccion.
+            //numvariable++;
+        }
+        else{
             JOptionPane.showMessageDialog(rootPane, "Verifique e ingrese "
                                              + "nuevamente la produccion", "ERROR!", JOptionPane.ERROR_MESSAGE);
             TextFieldProduccion.setText(null);
-        
-        //char a=varchar.toUpperCase().charAt(0);//Capturar primera letra unicamente y convertir a mayuscula
-        //varchar = Character.toString(a);
-        
-
+           
+        }
     }//GEN-LAST:event_ButtonNuevaProduccionMouseClicked
+
+    private void ButtonNextMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ButtonNextMouseClicked
+        //**LLAMAR A DOS METODOS PARA QUE ORGANICEN LOS DATOS EN LOS VECTORES**
+        //organizar organiceVector = new organizar();
+        
+        //vectorOrdenados=organiceVector.ordenar(vectorTabla, vectorSimbolos);
+       
+        matriz armarTabla = new matriz();
+        tamanoVectorSimbolos=vectorSimbolos.size();
+        tamanoVectorVariables=vectorVariables.size();
+        //if (numproducciones==1){
+        String tabla[][]=armarTabla.construirTabla(vectorSimbolos, vectorTabla,tamanoVectorSimbolos,tamanoVectorVariables);
+        TablaAnalisis tablaAnalizador = new TablaAnalisis();
+        tablaAnalizador.setMatriz(tabla);
+        String[] st =new String[vectorSimbolos.size()];
+        vectorSimbolos.toArray( st );
+        tablaAnalizador.setSimbolos(st);
+        //TablaAnalisis.main();
+
+    }//GEN-LAST:event_ButtonNextMouseClicked
+
+    private void BtnSiguienteVariableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BtnSiguienteVariableMouseClicked
+        numproducciones++;
+        numvariable++;
+        setVariable();
+        vectorTabla.add(vectorProducciones);
+        matriz almacenarDatosTabla = new matriz();
+        tamanoVectorSimbolos=vectorSimbolos.size();
+        tamanoVectorVariables=vectorVariables.size();
+        almacenarDatosTabla.construirTabla(vectorSimbolos,vectorProducciones,tamanoVectorSimbolos,numproducciones);
+        vectorProducciones.clear();
+        produccion=0;
+    }//GEN-LAST:event_BtnSiguienteVariableMouseClicked
 
     /**
     * @param args the command line arguments=
@@ -157,12 +294,14 @@ public class FormIngreso extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BtnSiguienteVariable;
     private javax.swing.JButton ButtonCancel;
     private javax.swing.JButton ButtonNext;
     private javax.swing.JButton ButtonNuevaProduccion;
     private javax.swing.JLabel LabelVariable;
     private javax.swing.JTextField TextFieldProduccion;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables
 
 }
