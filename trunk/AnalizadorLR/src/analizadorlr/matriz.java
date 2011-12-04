@@ -20,7 +20,13 @@ public class matriz {
     int c=0;//numero de simbolos existentes
     String[][] TablaVariables;
 
-  public void setTabla (String a){
+//   static void rango(int num, int den)throws ExcepcionIntervalo{
+//        if((num>100)||(den<-5)){
+//            throw new ExcepcionIntervalo("Números fuera del intervalo");
+//        }
+//    }
+
+    public void setTabla (String a){
       //TablaVariables = new String[f][c];
     TablaVariables[i][j] = a;
     

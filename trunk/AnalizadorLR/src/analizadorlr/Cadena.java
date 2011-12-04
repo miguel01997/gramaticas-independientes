@@ -1,5 +1,9 @@
 package analizadorlr;
 
+import java.util.Stack;
+import java.util.Vector;
+import javax.swing.JOptionPane;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -21,6 +25,22 @@ public class Cadena extends javax.swing.JFrame {
     public String[][] TablaRecibida;
     int numerofilas;
     int numerocolumnas;
+    String vieneLenguaje;
+    Vector VectorSimbolos= new Vector();
+    String vieneCadena;
+    char strvieneLenguaje;
+    char strvieneCadena;
+    String contenido;
+    char letra;
+    char variable;
+    String parainsertar;
+    char celda;
+    char anterior;
+    Stack pilaCadena = new Stack();
+    Stack pilaLenguaje = new Stack();
+    boolean aceptado=false;
+    int filanumero;
+    int columnanumero;
 
     /** Creates new form Cadena */
     public Cadena() {
@@ -45,9 +65,11 @@ public class Cadena extends javax.swing.JFrame {
         ButtonCerrar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Analizador Sintactico LR(1)");
 
         TxtArea.setColumns(20);
         TxtArea.setRows(5);
+        TxtArea.setTabSize(10);
         jScrollPane1.setViewportView(TxtArea);
 
         jLabel1.setText("Ingrese la cadena que desea analizar :");
@@ -143,54 +165,175 @@ System.exit(0);        // TODO add your handling code here:
 
     private void ButtonEvaluarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ButtonEvaluarMouseClicked
         strCadena=TxtCadena.getText();
+        for (int longCadena=0;longCadena<strCadena.length();longCadena++){
+//            char revisar=strCadena.charAt(longCadena);
+//           // recorrerSimbolos(revisar);
+//           while (!VectorSimbolos.contains(revisar)){
+//
+//            JOptionPane.showMessageDialog(rootPane, "Verifique e ingrese "
+//                                             + "nuevamente la cadena que desea analizar!", "ERROR!", JOptionPane.ERROR_MESSAGE);
+//            TxtCadena.setText(null);
+//
+//            break;
+//            }
+//
+        }
         char insertar;
-        pila pilaCadena = new pila();
-        pila pilaLenguaje = new pila();
         int longitud = strCadena.length();
 
         for (int i=longitud-1;i>=0;i--){
          insertar=strCadena.charAt(i);
-         pilaCadena.InsertarPilaCadena(insertar);
+         pilaCadena.push(insertar);
             }
-        TxtArea.setText("La cadena que ingreso, se ha insertado en la pila para su lectura LR/n");
-        TxtArea.setText("Empezamos ingresando la variable de inicio a la pila : S");
+//        TxtArea.setText(TablaRecibida.toString());
 
-        for (int i=0;i<numerofilas;i++){
-            for (int j=0;j<numerocolumnas;j++){
-                if (TablaRecibida[i][j]==" "){
-                    for (int k=0;k<numerocolumnas;k++){
-                        String contenido = TablaRecibida[i][k];
-                        for (int n=0;n<contenido.length();n++){
-                           char celda=contenido.charAt(n);
-                           char anterior= celda;
-                            if (celda==TablaRecibida[0][j].charAt(0)){
-                                if (anterior==TablaRecibida[i][0].charAt(0)){
-                                    if (TablaRecibida[i][numerocolumnas-1]=="$"){
-                                        TablaRecibida[i][j]="$";
-                                    }
+        TxtArea.append("La cadena que ingreso, se ha insertado en la pila para su lectura LR \n");
+//        TxtArea.getColumns();
+        TxtArea.append("Empezamos ingresando la variable de inicio a la pila : S \n");
+
+
+        for (int i=1;i<numerofilas;i++){//**1**Ubicamos un espacio en blanco
+            for (int j=1;j<numerocolumnas;j++){
+                //TxtArea.append(TablaRecibida[i][j]+" \n");
+                if (TablaRecibida[i][j].charAt(0)==' ' ){
+                    letra=TablaRecibida[0][j].charAt(0);//**2**tomar el simbolo cabeza donde se encuentra el espacio en blanco
+                    for (int a=1;a<numerocolumnas;a++){//contador de filas para recorrer la fila en busca de producciones que contngan el simbolo almacenado en letra
+
+
+
+                        for (int b=0;b<TablaRecibida[i][a].length();b++){//recorremos cada produccion de atras para adelante, buscando el simbolo
+                                if (TablaRecibida[i][a].charAt(b)==letra){
+                                    variable=TablaRecibida[i][a].charAt(b-1);
                                 }
                             }
 
-                        }
 
-                    }
+
+                        if(variable==TablaRecibida[i][0].charAt(0)){//compara que la variable almacenada corresponda a la variable del renglon que estoy leyendo
+                                    if (TablaRecibida[i][numerocolumnas-1].charAt(0)=='$'){
+                                        TablaRecibida[i][j]="$";
+                                        //a=numerocolumnas;
+                                    }
+                                    else{
+                                        TablaRecibida[i][j]="%";
+                                    }
+                                }
+                        else{
+
+                        }
+                            }
+                        }
                 }
 
             }
+        TxtArea.append("La tabla de analisis Sintactico es: \n");
+        PintarTabla(TablaRecibida);
+//                if (TablaRecibida[i][j].charAt(0)==' ' ){
+//                    for (int k=0;k<numerocolumnas;k++){
+//                            contenido = TablaRecibida[i][k];//obtenemos la variable que tiene el espacio en blanco
+//                        for (int n=0;n<contenido.length();n++){
+//                                celda=contenido.charAt(n);
+//                                anterior= celda;
+//                            if (celda==TablaRecibida[0][j].charAt(0)){
+//                                if (anterior==TablaRecibida[i][0].charAt(0)){
+//                                    if (TablaRecibida[i][numerocolumnas-1]=="$"){
+//                                        TablaRecibida[i][j]="$";
+//                                    }
+//                                    else {
+//                                        TablaRecibida[i][j]="%";
+//                                    }
+//
+//                                }
+//                            }
+//
+//                        }
+//
+//                    }
+//                }
+//
+//            }
+//        }
+        TxtArea.append("Inserta # en la pila \n" );
+        pilaLenguaje.push("FIN");
+        TxtArea.append("Inserta S en la pila \n" );
+        pilaLenguaje.push(TablaRecibida[1][0].charAt(0));
+
+      // boolean  finPila=true;
+        while(pilaLenguaje.peek().toString()!="FIN"){
+           // finPila=pilaLenguaje.peek().toString()!="FIN";
+            strvieneCadena=VienePilaCadena().charAt(0);
+            strvieneLenguaje=VienePilaLenguaje().charAt(0);
+//            if(strvieneCadena==strvieneLenguaje){
+//                TxtArea.append("saca " + strvieneLenguaje + " de la pila \n");
+//                TxtArea.append("lee el simbolo" + strvieneCadena + " de la cadena \n");
+//                pilaCadena.pop();
+//                pilaLenguaje.pop();
+//            }
+            if(strvieneLenguaje=='$'){
+                TxtArea.append("saca " + strvieneLenguaje + " de la pila \n");
+                pilaLenguaje.pop();
+                strvieneCadena=VienePilaCadena().charAt(0);
+                strvieneLenguaje=VienePilaLenguaje().charAt(0);
+
+            }
+              while(strvieneCadena==strvieneLenguaje){
+                TxtArea.append("saca " + strvieneLenguaje + " de la pila \n");
+                TxtArea.append("lee el simbolo " + strvieneCadena + " de la cadena \n");
+                pilaCadena.pop();
+                pilaLenguaje.pop();
+                if (pilaCadena.size()!=0){
+                strvieneCadena=VienePilaCadena().charAt(0);
+                  }
+                strvieneLenguaje=VienePilaLenguaje().charAt(0);
+                
+            }
+
+            if(strvieneLenguaje=='%'){
+                TxtArea.append("ERROR!!!! \n");
+                break;
+            }
+            if (pilaCadena.size()!=0){
+            strvieneCadena=VienePilaCadena().charAt(0);
+            }
+            strvieneLenguaje=VienePilaLenguaje().charAt(0);
+            if (pilaLenguaje.peek().toString()=="FIN"){
+                pilaLenguaje.pop();
+                break;
+            }
+
+            filanumero=recorrerVariables(strvieneLenguaje);
+            columnanumero= recorrerSimbolos(strvieneCadena);
+            parainsertar=TablaRecibida[filanumero][columnanumero];
+            String imprimir=pilaLenguaje.peek().toString();
+            TxtArea.append("Saca " + imprimir + " de la pila \n");
+            pilaLenguaje.pop();
+            for (int i=parainsertar.length()-1;i>=0;i--){
+                 insertar=parainsertar.charAt(i);
+                 TxtArea.append("Inserta "+ insertar + " en la pila \n");
+                 pilaLenguaje.push(insertar);
+            }
         }
-        pilaLenguaje.InsertarPilaLenguaje('#');
-        pilaLenguaje.InsertarPilaLenguaje(TablaRecibida[1][0].charAt(0));
+        aceptado=true;
+        if (aceptado==true && pilaCadena.size()==0 && pilaLenguaje.size()==0){
+            TxtCadena.setEditable(false);
+            TxtArea.append("Saca el simbolo # de la pila \n");
+            TxtArea.append("Cadena aceptada satisfactoriamente!\n");
+        }
+
     }//GEN-LAST:event_ButtonEvaluarMouseClicked
 
     /**
     * @param args the command line arguments
     */
-    public static void main() {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Cadena().setVisible(true);
-            }
-        });
+  public  void main( ) {
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+            //public void run() {
+//                new Cadena().setVisible(true);
+                    this.setVisible(true);
+//
+           // }
+//        });
+//
     }
 
     public void setNumerocolumnas(int numerocolumnas) {
@@ -205,7 +348,56 @@ System.exit(0);        // TODO add your handling code here:
         this.TablaRecibida = TablaRecibida;
     }
 
-    public 
+    public int buscarRegistro(){
+        int columna=0;
+
+        return columna;
+    }
+
+    public String VienePilaLenguaje(){
+        vieneLenguaje=pilaLenguaje.peek().toString();
+        return vieneLenguaje;
+    }
+
+    public String VienePilaCadena(){
+        vieneCadena=pilaCadena.peek().toString();
+        return vieneCadena;
+    }
+
+    public int recorrerSimbolos(char a){
+        int columna=0;
+         for (int i=1;i<numerocolumnas;i++){
+             if (a==TablaRecibida[0][i].charAt(0))
+                 columna=i;
+         }
+        return columna;
+    }
+    public int recorrerVariables(char a){
+    int fila=0;
+         for (int i=1;i<numerofilas;i++){
+             if (a==TablaRecibida[i][0].charAt(0))
+                 fila=i;
+         }
+    return fila;
+    }
+
+    public void insertarPila(String insertar){
+        pilaLenguaje.push(insertar.toString());
+    }
+
+    public void PintarTabla(String tabla[][]){
+        for (int fila=0;fila<numerofilas;fila++){
+            for (int columna=0; columna<numerocolumnas;columna++){
+                TxtArea.append(TablaRecibida[fila][columna] + "      ");
+                if (columna==numerocolumnas-1)
+                    TxtArea.append("   " + "  \n");
+            }
+        }
+    }
+
+    public void setVectorSimbolos(Vector VectorSimbolos) {
+        this.VectorSimbolos = VectorSimbolos;
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
