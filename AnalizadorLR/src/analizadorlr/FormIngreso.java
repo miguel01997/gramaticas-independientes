@@ -33,7 +33,10 @@ public class FormIngreso extends javax.swing.JFrame {
      int tamanoVectorVariables;
      int numvariable = 0;
      int produccion = 0;
+     int filacopiar=0;
     public int numproducciones=0;
+    int cantidadVariables=0;
+    int cantidadSimbolos=0;
 
 //     public void almacenarDatosTabla (Vector vectorAlmacenar){
 //       vectorTabla.add(vectorAlmacenar);
@@ -74,8 +77,11 @@ public class FormIngreso extends javax.swing.JFrame {
 
    public void copiarMatrizFinal (String[][] tabla, int fila, int tamano){
       for (int i =0; i<tamano;i++){
-          MatrizFinal[fila][i]=tabla[0][i];
+          MatrizFinal[filacopiar][i]=tabla[fila][i];
+          
+
       }
+      filacopiar=filacopiar+1;
    }
 
 //    public void copiarVariables(char[] variables, int tamano){ //tamano infica el siguiente cuadro en blanco para agregar las variables y simbolos
@@ -133,6 +139,7 @@ public class FormIngreso extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Analizador Sintactico LR(1)");
 
         jLabel1.setText("Producciones de   :");
 
@@ -165,7 +172,7 @@ public class FormIngreso extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setFont(new java.awt.Font("Ubuntu", 1, 12)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Ubuntu", 1, 12));
         jLabel2.setText("* Lambda-->$");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -259,11 +266,17 @@ public class FormIngreso extends javax.swing.JFrame {
     private void ButtonNextMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ButtonNextMouseClicked
         
         Cadena ventanaCadena = new Cadena();
-        ventanaCadena.setTablaRecibida(MatrizFinal);
-        ventanaCadena.setNumerocolumnas(tamanoVectorVariables);
-        ventanaCadena.setNumerofilas(tamanoVectorSimbolos);
+       // ventanaCadena.setVisible(true);
         ventanaCadena.main();
+        ventanaCadena.setTablaRecibida(MatrizFinal);
+        ventanaCadena.setVectorSimbolos(vectorSimbolos);
+        ventanaCadena.setNumerocolumnas(cantidadSimbolos);
+        ventanaCadena.setNumerofilas(cantidadVariables+1);
+        ventanaCadena.PintarTabla(MatrizFinal);
+        // ventanaCadena.setVisible(true);
+//        ventanaCadena.main();
         this.setVisible(false);
+        ventanaCadena.setVisible(true);
         //**LLAMAR A DOS METODOS PARA QUE ORGANICEN LOS DATOS EN LOS VECTORES**
         //organizar organiceVector = new organizar();
         
@@ -296,11 +309,14 @@ public class FormIngreso extends javax.swing.JFrame {
         tamanoVectorVariables=vectorVariables.size();
         tabla=almacenarDatosTabla.construirTabla(vectorSimbolos,vectorProducciones,tamanoVectorSimbolos,1);
         if(numproducciones==1){
-            MatrizFinal=new String[tamanoVectorVariables][tamanoVectorSimbolos+3];
+            MatrizFinal=new String[tamanoVectorVariables+4][tamanoVectorSimbolos];
             copiarMatrizFinal(tabla, 0,tamanoVectorSimbolos);
         }
         copiarMatrizFinal(tabla, 1,tamanoVectorSimbolos);
+        //filacopiar=filacopiar+1;
         vectorProducciones.clear();
+        cantidadSimbolos=tamanoVectorSimbolos;
+        cantidadVariables=tamanoVectorVariables;
         produccion=0;
     }//GEN-LAST:event_BtnSiguienteVariableMouseClicked
 
